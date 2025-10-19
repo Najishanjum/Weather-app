@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoImpact: Carbon Footprint Tracker</title>
+    <style>
+        /* CSS goes here */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-color: #F5F5DC;
+            color: #333333;
+        }
+        header {
+            background-color: #2E8B57;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        header .logo i {
+            margin-right: 0.5rem;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #87CEEB;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #2E8B57;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        .cta-button {
+            background-color: #87CEEB;
+            color: white;
+            padding: 0.8rem 2rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .cta-button:hover {
+            background-color: #5bb3d6;
+        }
+        .dashboard-section {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .dashboard-section h2 {
+            font-size: 2rem;
+            color: #2E8B57;
+            margin-bottom: 1rem;
+        }
+        .carbon-chart {
+            background-color: #e9f5e9;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .tip-widget, .badges-widget {
+            background-color: #f0f8ff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .tip-widget h3, .badges-widget h3 {
+            margin-top: 0;
+            color: #2E8B57;
+        }
+        .badge-list {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .badge-item {
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .badge-item i {
+            font-size: 2.5rem;
+            color: gold;
+        }
+        .log-form {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-top: 2rem;
+        }
+        .log-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .log-form input, .log-form select {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .log-form button {
+            background-color: #2E8B57;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .log-form button:hover {
+            background-color: #1e6b3e;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            margin-top: 2rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-leaf"></i> EcoImpact
+        </div>
+        <nav>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#log-activity">Log Activity</a>
+            <a href="#">Tips</a>
+            <a href="#">Community</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Your Journey to a Greener Tomorrow Starts Here.</h1>
+        <p>Track your carbon footprint, get personalized tips, and join a community committed to a healthier planet.</p>
+        <a href="#log-activity" class="cta-button">Start Your Free Trial</a>
+    </section>
+    
+    
+    <section id="dashboard" class="container dashboard-section">
+        <div>
+            <h2>Your Carbon Footprint</h2>
+            <div class="carbon-chart">
+                <canvas id="carbonChart"></canvas>
+            </div>
+            <p>Your current monthly footprint is <strong id="totalFootprint">0 kg CO₂e</strong>.</p>
+        </div>
+        <div>
+            <div class="tip-widget">
+                <h3>💡 Today's Tip</h3>
+                <p id="todaysTip">Try a meatless meal to reduce your food emissions!</p>
+            </div>
+            <div class="badges-widget">
+                <h3>🎖️ My Eco-Badges</h3>
+                <div class="badge-list" id="badgeList">
+                    </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="log-activity" class="container">
+        <h2>Log Your Daily Activity</h2>
+        <form id="activityForm" class="log-form">
+            <label for="activityType">Activity Type:</label>
+            <select id="activityType" name="activityType">
+                <option value="travel">Travel</option>
+                <option value="energy">Home Energy</option>
+                <option value="purchases">Purchases</option>
+            </select>
+            
+            <label for="value">Value:</label>
+            <input type="number" id="value" name="value" required placeholder="e.g., 50 (km or kWh)">
+            
+            <button type="submit">Calculate Footprint</button>
+            <p id="resultMessage" style="margin-top: 1rem;"></p>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 EcoImpact. All rights reserved. | <a href="#">Privacy Policy</a></p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // JavaScript goes here
+        document.addEventListener('DOMContentLoaded', () => {
+            const activityForm = document.getElementById('activityForm');
+            const resultMessage = document.getElementById('resultMessage');
+            const totalFootprintDisplay = document.getElementById('totalFootprint');
+            const badgeList = document.getElementById('badgeList');
+
+            // Hardcoded emission factors (simplified for prototype)
+            const emissionFactors = {
+                travel: 0.14, // kg CO2e per km (average car)
+                energy: 0.5, // kg CO2e per kWh (average electricity)
+                purchases: 1.0 // kg CO2e per dollar (very rough estimate)
+            };
+
+            // Prototype data
+            let currentFootprint = 0;
+            let footprintsByCategory = {
+                travel: 0,
+                energy: 0,
+                purchases: 0
+            };
+            const earnedBadges = [];
+
+            // Chart.js setup
+            const ctx = document.getElementById('carbonChart').getContext('2d');
+            const carbonChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Travel', 'Home Energy', 'Purchases'],
+                    datasets: [{
+                        label: 'Carbon Footprint (kg CO₂e)',
+                        data: [0, 0, 0],
+                        backgroundColor: ['#2E8B57', '#4682B4', '#FFA500'],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Monthly Footprint Breakdown'
+                        }
+                    }
+                }
+            });
+
+            // Handle form submission
+            activityForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const activityType = document.getElementById('activityType').value;
+                const value = parseFloat(document.getElementById('value').value);
+                
+                if (isNaN(value) || value <= 0) {
+                    resultMessage.textContent = 'Please enter a valid positive number.';
+                    resultMessage.style.color = 'red';
+                    return;
+                }
+                
+                const emissions = value * emissionFactors[activityType];
+                currentFootprint += emissions;
+                footprintsByCategory[activityType] += emissions;
+
+                // Update UI
+                totalFootprintDisplay.textContent = `${currentFootprint.toFixed(2)} kg CO₂e`;
+                resultMessage.textContent = `Successfully logged ${emissions.toFixed(2)} kg CO₂e for ${activityType}.`;
+                resultMessage.style.color = '#2E8B57';
+
+                // Update chart
+                carbonChart.data.datasets[0].data = [
+                    footprintsByCategory.travel,
+                    footprintsByCategory.energy,
+                    footprintsByCategory.purchases
+                ];
+                carbonChart.update();
+
+                // Check for and add new badges
+                checkForBadges();
+
+                // Reset form
+                activityForm.reset();
+            });
+
+            // Badge logic
+            function checkForBadges() {
+                if (currentFootprint > 100 && !earnedBadges.includes('starter')) {
+                    addBadge('Starter', 'fas fa-seedling', 'You started your journey!');
+                }
+                if (footprintsByCategory.travel < 50 && !earnedBadges.includes('travelSaver')) {
+                    addBadge('Travel Saver', 'fas fa-bicycle', "You're reducing travel emissions!");
+                }
+                if (footprintsByCategory.energy < 20 && !earnedBadges.includes('energySaver')) {
+                    addBadge('Energy Saver', 'fas fa-lightbulb', "You're a home energy pro!");
+                }
+            }
+
+            function addBadge(title, iconClass, description) {
+                const badgeElement = document.createElement('div');
+                badgeElement.className = 'badge-item';
+                badgeElement.innerHTML = `<i class="${iconClass}"></i><br>${title}`;
+                badgeList.appendChild(badgeElement);
+                earnedBadges.push(title);
+            }
+        });
+    </script>
+</body>
+</html>
